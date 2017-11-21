@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const buildPath = './build/';
 const javaScriptPath = 'JavaScript/';
@@ -17,7 +18,7 @@ module.exports = {
         },
         extensions: ['*', '.js', '.vue', '.json']
     },
-    entry: './src/JavaScript/mainVue.js',
+    entry: ['./src/JavaScript/mainVue.js', './src/Assets/Css/style.sass'],
     output: {
         filename: javaScriptPath + 'app.js',
         path: path.resolve(__dirname, buildPath)
@@ -36,38 +37,38 @@ module.exports = {
                 loader: 'file-loader',
                 // loader: "file-loader?name=/Assets/Images/[name].[ext]",
                 options: {
-                    name: imagePath + '[name].[ext]?[hash]'
+                    name: imagePath + '[name].[hash].[ext]'
                 }
             },
             {
-                // https://medium.com/@mahesh.ks/using-sass-scss-in-vue-js-2-d472af0facf9
-                test: /\.scss$/,
-                use: [{
-                    loader: "style-loader"
-                }, {
-                    loader: "css-loader"
-                }, {
-                    loader: "sass-loader",
-                    options: {
-                        includePaths: [
-                            path.resolve("./node_modules/bootstrap-sass/assets/stylesheets")
-                        ]
-                    }
-                }],
-
+                test: /\.(sass|scss|css)$/,
+                loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader']),
+                // geht nicht, da options nur für einzelne loader gehen
+                // options: {
+                //     includePaths: [
+                //         path.resolve("./node_modules/bootstrap-sass/assets/stylesheets")
+                //     ]
+                // }
             }
+
         ]
     },
-    // https://www.npmjs.com/package/html-webpack-plugin
-    plugins: [new HtmlWebpackPlugin({
-        title: 'Instagram Watcher',
-        // filename: 'index.html',
-        template: './src/index.ejs',
-        files: {
-            // css: [cssPath + 'style.css', cssPath + 'style.sass'],    // kann wegbleiben weil das CSS irgendwo anders ist
-            js: [javaScriptPath + 'app.js']
-        },
-        hash: true
-    })]
+    plugins: [
+        // https://www.npmjs.com/package/html-webpack-plugin
+        new HtmlWebpackPlugin({
+            title: 'Instagram Watcher',
+            // filename: 'index.html',
+            template: './src/index.ejs',
+            files: {
+                css: [cssPath + 'style.css', path.resolve("./node_modules/bootstrap-sass/assets/stylesheets")],
+                js: [javaScriptPath + 'app.js']
+            },
+            hash: true
+        }),
+        // https://jonathanmh.com/webpack-sass-scss-compiling-separate-file/
+        new ExtractTextPlugin({
+            filename: cssPath + 'style.css',
+            allChunks: true,
+        })
+    ]
 };
-// npm install file-loader --save-dev

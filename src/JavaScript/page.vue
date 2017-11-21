@@ -41,6 +41,3 @@
         }
     }
 </script>
-<style lang="scss" scoped>
-    @import '../Assets/Css/style';
-</style>
