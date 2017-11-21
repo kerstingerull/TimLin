@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  instragram-watcher:
+    build: .
+    container_name: instragram-watcher
+    volumes:
+      - ./build:/app:rw
+    ports:
+      - 9999:80
