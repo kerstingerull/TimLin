@@ -17,6 +17,13 @@ const router = new VueRouter({
 import Page from './page.vue';
 Vue.component('page', Page);
 
+// bootstrap
+import jQuery from 'jquery';
+global.$ = jQuery;
+import popperjs from 'popper.js';
+global.Popper = popperjs;
+var Bootstrap = require('bootstrap');
+
 // Vue Object
 new Vue({
     router,

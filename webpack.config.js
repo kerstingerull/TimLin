@@ -3,10 +3,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const buildPath = './build/';
+const srcPath = './src/';
 const javaScriptPath = 'JavaScript/';
+const cssPath = 'Sass/';
 const assetPath = 'Assets/';
 const imagePath = assetPath + 'Images/';
-const cssPath = assetPath + 'Css/';
 
 // node_modules/.bin/webpack --display-error-details
 // node_modules/.bin/webpack --watch
@@ -14,11 +15,14 @@ module.exports = {
     resolve: {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
-            'images': path.resolve(__dirname, buildPath + imagePath)
+            'images': path.resolve(__dirname, buildPath + imagePath),
         },
         extensions: ['*', '.js', '.vue', '.json']
     },
-    entry: ['./src/JavaScript/mainVue.js', './src/Assets/Css/style.sass'],
+    entry: [
+        srcPath + javaScriptPath + 'mainVue.js',
+        srcPath + cssPath + 'app.sass'
+    ],
     output: {
         filename: javaScriptPath + 'app.js',
         path: path.resolve(__dirname, buildPath)
@@ -41,16 +45,21 @@ module.exports = {
                 }
             },
             {
-                test: /\.(sass|scss|css)$/,
-                loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader']),
-                // geht nicht, da options nur für einzelne loader gehen
-                // options: {
-                //     includePaths: [
-                //         path.resolve("./node_modules/bootstrap-sass/assets/stylesheets")
-                //     ]
-                // }
+                test: /\.(scss|sass|css)$/,
+                use: ExtractTextPlugin.extract([{
+                    loader: 'css-loader', // translates CSS into CommonJS modules
+                    options: {
+                        minimize: true,
+                        sourceMap: true
+                    }
+                }, {
+                    loader: 'sass-loader', // compiles SASS to CSS
+                    options: {
+                        minimize: true,
+                        sourceMap: true
+                    }
+                }]),
             }
-
         ]
     },
     plugins: [
@@ -60,14 +69,14 @@ module.exports = {
             // filename: 'index.html',
             template: './src/index.ejs',
             files: {
-                css: [cssPath + 'style.css', path.resolve("./node_modules/bootstrap-sass/assets/stylesheets")],
+                css: [cssPath + 'app.css'],
                 js: [javaScriptPath + 'app.js']
             },
             hash: true
         }),
         // https://jonathanmh.com/webpack-sass-scss-compiling-separate-file/
         new ExtractTextPlugin({
-            filename: cssPath + 'style.css',
+            filename: cssPath + 'app.css',
             allChunks: true,
         })
     ]
