@@ -65,13 +65,13 @@ module.exports = {
             {
                 test: /\.(sass)$/,
                 use: extractSASS.extract([{
-                    loader: 'css-loader', // translates CSS into CommonJS modules
+                    loader: 'css-loader',
                     options: {
                         minimize: true,
                         sourceMap: true
                     }
                 }, {
-                    loader: 'sass-loader', // compiles SASS to CSS
+                    loader: 'sass-loader',
                     options: {
                         minimize: true,
                         sourceMap: true
@@ -81,13 +81,13 @@ module.exports = {
             {
                 test: /\.(scss)$/,
                 use: extractSCSS.extract([{
-                    loader: 'css-loader', // translates CSS into CommonJS modules
+                    loader: 'css-loader',
                     options: {
                         minimize: true,
                         sourceMap: true
                     }
                 }, {
-                    loader: 'sass-loader', // compiles SASS to CSS
+                    loader: 'sass-loader',
                     options: {
                         minimize: true,
                         sourceMap: true

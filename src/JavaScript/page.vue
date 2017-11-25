@@ -1,40 +1,31 @@
 <template>
     <div id="page">
-        <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" href="#">Navbar</a>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#">Disabled</a>
-                    </li>
-                </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
-            </div>
-        </nav>
-        <h1>InstagramWatcher - {{ date | moment("DD.MM.YYYY HH:mm:ss") }}</h1>
+        <navigation-main v-bind:date="date"></navigation-main>
         <div class="container">
-            <div class="row">
+
+            <div class="row" v-for="(element, index) in timeline">
                 <div class="col-lg-6 col-sm-12">
-                    more later {{ token }}<br/>
-                    <i class="fa fa-camera-retro fa-5x"></i> fa-camera-retro
+
+                    <div class="card float-sm-right mb-1" style="width:150px" v-if="index % 2 === 0">
+                        <img class="card-img-top" :src="element.images.thumbnail.url" :alt="element.caption.text" :title="element.caption.text" />
+                        <div class="card-body">
+                            <p class="card-text"><i class="fa fa-comments"></i> {{ element.comments.count}} <i class="fa fa-heart text-danger"></i> {{ element.likes.count}}</p>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="col-lg-6 col-sm-12">
-                    <img src="../Assets/Images/amazon.jpg" />
+
+                    <div class="card mb-1" style="width:150px" v-if="index % 2 === 1">
+                        <img class="card-img-top" :src="element.images.thumbnail.url" :alt="element.caption.text" :title="element.caption.text" />
+                        <div class="card-body">
+                            <p class="card-text"><i class="fa fa-comments"></i> {{ element.comments.count}} <i class="fa fa-heart text-danger"></i> {{ element.likes.count}}</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+
         </div>
     </div>
 </template>
@@ -45,32 +36,34 @@
         data: function () {
             return {
                 date: new Date(),
-                token: ''
+                token: '',
+                timeline: null,
             }
         },
         methods: {
             load: function () {
-
-                let replaceString = '#access_token=';
-                let hash = this.$route.hash;
-                if (hash !== '') {
-                    let index = hash.search(replaceString);
-                    if (index === 0) {
-                        this.token = hash.replace(replaceString, '');
-                    }
-                }
-                console.log(this.token);
                 let ApiClient = new InstagramApiClient();
+                this.token = ApiClient.getToken(this.$route);
+
                 if (this.token === '') {
                     window.location.href = ApiClient.getTokenUrl();
                 } else {
                     this.$router.push('/');
+                    this.getTimeLine();
                 }
-
+            },
+            getTimeLine: function () {
+                let ApiClient = new InstagramApiClient();
+                ApiClient.getTimeLine(this.token, this.callback);
+            },
+            callback:  function (response) {
+                if (response.data != '') {
+                    this.timeline = response.data.data;
+                }
             }
         },
         created() {
-//            this.load();
+            this.load();
         }
     }
 </script>

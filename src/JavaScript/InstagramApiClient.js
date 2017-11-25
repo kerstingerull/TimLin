@@ -22,16 +22,24 @@ class InstagramApiClient
         return this.tokenUrl;
     }
 
-    getToken()
+    getToken(route)
     {
-        let _this = this;
-        _this.requestGet('get', _this.tokenUrl).then(
-            function (response) {
-                console.log(response.data);
-                _this.token = response.data;
+        let replaceString = '#access_token=';
+        let hash = route.hash;
+        let token = '';
+        if (hash !== '') {
+            let index = hash.search(replaceString);
+            if (index === 0) {
+                token = hash.replace(replaceString, '');
             }
-        );
-        return _this.token;
+        }
+        return token;
+    }
+
+    getTimeLine(token, callback)
+    {
+        let postsUrl =  'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + token;
+        this.requestGet('get', postsUrl).then(callback);
     }
 
     requestGet(method, url) {

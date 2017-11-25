@@ -8,7 +8,6 @@ Vue.use(require('vue-moment'), {moment});
 // router
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
-
 const router = new VueRouter({
     mode: 'history'
 });
@@ -16,6 +15,10 @@ const router = new VueRouter({
 // my Page
 import Page from './page.vue';
 Vue.component('page', Page);
+
+// Navigation
+import NavigationMain from './Navigation/main.vue';
+Vue.component('navigation-main', NavigationMain);
 
 // bootstrap
 import jQuery from 'jquery';

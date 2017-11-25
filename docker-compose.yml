@@ -1,9 +1,13 @@
 version: '3.3'
 services:
-  instragram-watcher:
+  instagram-watcher:
     build: .
-    container_name: instragram-watcher
+    container_name: instagram-watcher
     volumes:
       - ./build:/app:rw
+      - ./.env:/app/.env:rw
     ports:
       - 9999:80
+    environment:
+      - INSTAGRAM_API_CLIENT_ID
+      - BASE_URL
