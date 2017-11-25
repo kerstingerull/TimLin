@@ -6,8 +6,17 @@ const buildPath = './build/';
 const srcPath = './src/';
 const javaScriptPath = 'JavaScript/';
 const cssPath = 'Sass/';
+const scssPath = 'Scss/';
 const assetPath = 'Assets/';
 const imagePath = assetPath + 'Images/';
+const fontPath = assetPath + 'Fonts/';
+
+const extractSASS = new ExtractTextPlugin({
+    filename: cssPath + 'app.css',
+});
+const extractSCSS = new ExtractTextPlugin({
+    filename: cssPath + 'font-awesome.css',
+});
 
 // node_modules/.bin/webpack --display-error-details
 // node_modules/.bin/webpack --watch
@@ -21,7 +30,8 @@ module.exports = {
     },
     entry: [
         srcPath + javaScriptPath + 'mainVue.js',
-        srcPath + cssPath + 'app.sass'
+        srcPath + cssPath + 'app.sass',
+        srcPath + fontPath + scssPath + 'font-awesome.scss'
     ],
     output: {
         filename: javaScriptPath + 'app.js',
@@ -37,16 +47,40 @@ module.exports = {
             },
             {
                 // https://github.com/webpack-contrib/file-loader
-                test: /\.(jpe?g|png|gif|svg)$/i,
+                test: /Images\/.*\.(jpe?g|png|gif|svg)$/i,
                 loader: 'file-loader',
-                // loader: "file-loader?name=/Assets/Images/[name].[ext]",
                 options: {
                     name: imagePath + '[name].[hash].[ext]'
                 }
             },
             {
-                test: /\.(scss|sass|css)$/,
-                use: ExtractTextPlugin.extract([{
+                test: /Fonts\/.*\.(otf|eot|svg|ttf|woff?2)$/i,
+                loader: 'file-loader',
+                options: {
+                    name: fontPath + '[name].[ext]',
+                    // outputPath: '../',
+                    publicPath: '/'
+                }
+            },
+            {
+                test: /\.(sass)$/,
+                use: extractSASS.extract([{
+                    loader: 'css-loader', // translates CSS into CommonJS modules
+                    options: {
+                        minimize: true,
+                        sourceMap: true
+                    }
+                }, {
+                    loader: 'sass-loader', // compiles SASS to CSS
+                    options: {
+                        minimize: true,
+                        sourceMap: true
+                    }
+                }]),
+            },
+            {
+                test: /\.(scss)$/,
+                use: extractSCSS.extract([{
                     loader: 'css-loader', // translates CSS into CommonJS modules
                     options: {
                         minimize: true,
@@ -66,18 +100,34 @@ module.exports = {
         // https://www.npmjs.com/package/html-webpack-plugin
         new HtmlWebpackPlugin({
             title: 'Instagram Watcher',
-            // filename: 'index.html',
             template: './src/index.ejs',
             files: {
-                css: [cssPath + 'app.css'],
+                css: [
+                    fontPath + 'font-awesome.css',
+                    cssPath + 'app.css'
+                ],
                 js: [javaScriptPath + 'app.js']
             },
             hash: true
         }),
         // https://jonathanmh.com/webpack-sass-scss-compiling-separate-file/
-        new ExtractTextPlugin({
-            filename: cssPath + 'app.css',
-            allChunks: true,
-        })
+        extractSASS,
+        extractSCSS
     ]
 };
+// TODO check other bootstrap implementation
+// https://getbootstrap.com/docs/4.0/getting-started/webpack/
+/**
+ *     plugins: [
+ ...
+ new webpack.ProvidePlugin({
+            '$': "jquery",
+            'jQuery': "jquery",
+            'Popper': 'popper.js'
+        }),
+ */
+
+
+
+
+//  --save-dev

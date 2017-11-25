@@ -28,7 +28,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-sm-12">
-                    more later {{ token }}
+                    more later {{ token }}<br/>
+                    <i class="fa fa-camera-retro fa-5x"></i> fa-camera-retro
                 </div>
                 <div class="col-lg-6 col-sm-12">
                     <img src="../Assets/Images/amazon.jpg" />
