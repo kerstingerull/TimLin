@@ -1,8 +1,8 @@
 version: '3.3'
 services:
-  instagram-watcher:
+  fe:
     build: .
-    container_name: instagram-watcher
+    container_name: fe
     volumes:
       - ./build:/app:rw
       - ./.env:/app/.env:rw

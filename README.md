@@ -2,6 +2,9 @@
 Links
 =====
 
+wird nie so funktionieren, wie gewollt, da Instagram einen Teil der API zu gemacht hat
+http://www.businessinsider.de/instagram-made-a-change-that-stopped-lots-of-third-party-apps-from-working-2016-6?r=UK&IR=T
+
 * http://localhost:9999/
 * http://fontawesome.io/cheatsheet/
 * https://www.w3schools.com/bootstrap4/
@@ -12,6 +15,7 @@ Links
 * https://www.npmjs.com/package/html-webpack-plugin
 * https://github.com/webpack-contrib/file-loader
 * https://medium.com/@mahesh.ks/using-sass-scss-in-vue-js-2-d472af0facf9
+* vll zum Kopieren https://github.com/webpack-contrib/copy-webpack-plugin
 
 Commands
 ========

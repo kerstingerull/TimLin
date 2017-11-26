@@ -99,7 +99,7 @@ module.exports = {
     plugins: [
         // https://www.npmjs.com/package/html-webpack-plugin
         new HtmlWebpackPlugin({
-            title: 'Instagram Watcher',
+            title: 'TimLin',
             template: './src/index.ejs',
             files: {
                 css: [

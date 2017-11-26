@@ -36,10 +36,16 @@ class InstagramApiClient
         return token;
     }
 
-    getTimeLine(token, callback)
+    getPosts(token, callback)
     {
-        let postsUrl =  'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + token;
-        this.requestGet('get', postsUrl).then(callback);
+        let url =  'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + token;
+        this.requestGet('get', url).then(callback);
+    }
+
+    getComments(mediaId, token, callback)
+    {
+        let url =  'https://api.instagram.com/v1/media/' + mediaId + '/comments?access_token=' + token;
+        this.requestGet('get', url).then(callback);
     }
 
     requestGet(method, url) {
